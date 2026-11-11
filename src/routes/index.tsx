@@ -292,6 +292,8 @@ function Index() {
     return () => window.clearInterval(interval);
   }, [autoplay]);
 
+  if (!active) return null;
+
   return (
     <main className="solvlyte-page min-h-screen overflow-hidden bg-background text-foreground">
       <header className="site-header">
