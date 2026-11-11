@@ -6,11 +6,15 @@ const homepage = readFileSync(resolve(process.cwd(), "src/routes/index.tsx"), "u
 const normalizedHomepage = homepage.replace(/\s+/g, " ");
 
 describe("SOLVLYTE approved homepage copy", () => {
-  it("keeps both approved hero headlines and the two audience-specific messages", () => {
-    expect(homepage).toContain("RELIABLE SOLAR SOLUTIONS FOR YOUR HOME");
+  it("keeps both approved hero headlines and their descriptions", () => {
     expect(homepage).toContain("Your World Doesn't Have to Stop When the Grid Does.");
-    expect(homepage).toContain("SMART ENERGY SOLUTIONS FOR YOUR BUSINESS");
     expect(homepage).toContain("Because Your Business Can't Afford to Stop.");
+    expect(normalizedHomepage).toContain(
+      "Tired of unpredictable electricity, rising fuel costs and the constant dependence on generators?",
+    );
+    expect(normalizedHomepage).toContain(
+      "Power interruptions shouldn't stand between your business and its next milestone.",
+    );
   });
 
   it("keeps the approved brand line and excludes the outdated tagline", () => {
@@ -36,44 +40,81 @@ describe("SOLVLYTE approved homepage copy", () => {
     }
   });
 
-  it("keeps the approved section headings and supporting copy in the PDF order", () => {
-    const sections = [
-      "WHO WE ARE",
+  it("keeps the approved section headings in the documented order", () => {
+    const headings = [
       "A Better Way to Experience Electricity.",
-      "OUR PRODUCTS &amp; SERVICES",
       "Everything You Need for a Smarter Power Solution.",
-      "THE SOLVLYTE ADVANTAGE",
       "Premium Quality Shouldn't Come at an Unaffordable Price.",
-      "MORE THAN JUST SOLAR EQUIPMENT",
       "A Better Power Experience, Designed Around Your Needs.",
-      "YOUR JOURNEY TO BETTER POWER",
       "Getting Started with SOLVLYTE Is Simple.",
-      "OUR COMMITMENT TO YOU",
       "Our Commitment Doesn't End at Installation.",
-      "HAVE QUESTIONS?",
       "Everything You Need to Know Before Getting Started.",
-      "YOUR BETTER POWER EXPERIENCE STARTS HERE",
       "Stop Adjusting to Poor Electricity. Start Enjoying a Better Solution.",
     ];
 
     let cursor = 0;
-    for (const section of sections) {
-      const index = normalizedHomepage.indexOf(section, cursor);
-      expect(index, `missing or out of order: ${section}`).toBeGreaterThan(-1);
-      cursor = index + section.length;
+    for (const heading of headings) {
+      const index = normalizedHomepage.indexOf(heading, cursor);
+      expect(index, `missing or out of order: ${heading}`).toBeGreaterThan(-1);
+      cursor = index + heading.length;
     }
+  });
+
+  it("offers the approved calls to action verbatim", () => {
+    expect(normalizedHomepage).toContain("Book a Free Consultation");
+    expect(normalizedHomepage).toContain("Explore Our Plans");
+    expect(normalizedHomepage).toContain("Book Your Free Consultation");
+    expect(normalizedHomepage).toContain("Contact Us");
   });
 
   it("stays a static, frontend-only homepage", () => {
     expect(homepage).not.toMatch(/<form/i);
     expect(homepage).not.toMatch(/fetch\(|axios|useMutation|supabase|stripe/i);
   });
+});
 
-  it("offers both approved hero calls to action", () => {
-    expect(normalizedHomepage).toContain("Book a Free Consultation");
-    expect(normalizedHomepage).toContain("Explore Our Plans");
-    expect(normalizedHomepage).toContain(
-      "SOLVLYTE: Here for your power needs, beyond installation.",
+describe("SOLVLYTE restrained interface", () => {
+  it("carries no decorative section labels or numbering", () => {
+    const removed = [
+      "WHO WE ARE",
+      "OUR PRODUCTS",
+      "THE SOLVLYTE ADVANTAGE",
+      "MORE THAN JUST SOLAR EQUIPMENT",
+      "YOUR JOURNEY TO BETTER POWER",
+      "OUR COMMITMENT TO YOU",
+      "HAVE QUESTIONS?",
+      "YOUR BETTER POWER EXPERIENCE STARTS HERE",
+      "RELIABLE SOLAR SOLUTIONS FOR YOUR HOME",
+      "SMART ENERGY SOLUTIONS FOR YOUR BUSINESS",
+      "FOR THE HOME",
+      "FOR YOUR BUSINESS",
+      "PORT HARCOURT · RIVERS STATE",
+      "/ 02",
+    ];
+
+    for (const label of removed) {
+      expect(homepage, `decorative label returned: ${label}`).not.toContain(label);
+    }
+
+    expect(homepage).not.toMatch(/String\(index \+ 1\)\.padStart/);
+  });
+
+  it("keeps the hero to one headline, one description and two actions", () => {
+    const hero = homepage.slice(
+      homepage.indexOf('className="hero"'),
+      homepage.indexOf('id="about"'),
     );
+    expect(hero.match(/<h1>/g)).toHaveLength(1);
+    expect(hero.match(/className="button-primary"/g)).toHaveLength(1);
+    expect(hero.match(/className="button-link"/g)).toHaveLength(1);
+  });
+
+  it("renders one image per hero slide and nothing else in the hero media", () => {
+    const hero = homepage.slice(
+      homepage.indexOf('className="hero"'),
+      homepage.indexOf('id="about"'),
+    );
+    expect(hero.match(/<img/g)).toHaveLength(1);
+    expect(hero).toContain("slides.map");
   });
 });
