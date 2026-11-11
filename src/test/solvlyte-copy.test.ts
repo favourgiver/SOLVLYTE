@@ -35,4 +35,45 @@ describe("SOLVLYTE approved homepage copy", () => {
       expect(normalizedHomepage).toContain(`question: "${question}"`);
     }
   });
+
+  it("keeps the approved section headings and supporting copy in the PDF order", () => {
+    const sections = [
+      "WHO WE ARE",
+      "A Better Way to Experience Electricity.",
+      "OUR PRODUCTS &amp; SERVICES",
+      "Everything You Need for a Smarter Power Solution.",
+      "THE SOLVLYTE ADVANTAGE",
+      "Premium Quality Shouldn't Come at an Unaffordable Price.",
+      "MORE THAN JUST SOLAR EQUIPMENT",
+      "A Better Power Experience, Designed Around Your Needs.",
+      "YOUR JOURNEY TO BETTER POWER",
+      "Getting Started with SOLVLYTE Is Simple.",
+      "OUR COMMITMENT TO YOU",
+      "Our Commitment Doesn't End at Installation.",
+      "HAVE QUESTIONS?",
+      "Everything You Need to Know Before Getting Started.",
+      "YOUR BETTER POWER EXPERIENCE STARTS HERE",
+      "Stop Adjusting to Poor Electricity. Start Enjoying a Better Solution.",
+    ];
+
+    let cursor = 0;
+    for (const section of sections) {
+      const index = normalizedHomepage.indexOf(section, cursor);
+      expect(index, `missing or out of order: ${section}`).toBeGreaterThan(-1);
+      cursor = index + section.length;
+    }
+  });
+
+  it("stays a static, frontend-only homepage", () => {
+    expect(homepage).not.toMatch(/<form/i);
+    expect(homepage).not.toMatch(/fetch\(|axios|useMutation|supabase|stripe/i);
+  });
+
+  it("offers both approved hero calls to action", () => {
+    expect(normalizedHomepage).toContain("Book a Free Consultation");
+    expect(normalizedHomepage).toContain("Explore Our Plans");
+    expect(normalizedHomepage).toContain(
+      "SOLVLYTE: Here for your power needs, beyond installation.",
+    );
+  });
 });
