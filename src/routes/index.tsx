@@ -407,7 +407,6 @@ function Index() {
             ))}
           </div>
           <div className="service-footer">
-            <span />
             <a className="text-link" href="#contact">Explore Our Plans <ArrowUpRight aria-hidden="true" /></a>
           </div>
         </div>
