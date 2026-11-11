@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## SOLVLYTE homepage architecture
+- Keep the approved visual-only SOLVLYTE experience on the single `/` TanStack route with in-page anchors; this preserves the user's homepage-only scope and avoids implying unbuilt workflows.
