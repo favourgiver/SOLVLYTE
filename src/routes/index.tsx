@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import homeImage from "@/assets/solvlyte-home.jpg";
-import businessImage from "@/assets/solvlyte-business.jpg";
+import shopsImage from "@/assets/solvlyte-shops.jpg";
 
 const slides = [
   {
@@ -17,8 +17,8 @@ const slides = [
     title: "Because Your Business Can't Afford to Stop.",
     description:
       "Power interruptions shouldn't stand between your business and its next milestone. Keep your operations running with reliable, professionally designed solar solutions that help reduce fuel expenses and minimise power-related disruptions.",
-    image: businessImage,
-    alt: "A Nigerian business premises with rooftop solar panels and tropical landscaping",
+    image: shopsImage,
+    alt: "Customers walking in and out of a row of shops with solar panels on the roof",
   },
 ];
 
@@ -279,9 +279,10 @@ function Index() {
             SOLVLYTE<span aria-hidden="true">.</span>
           </a>
           <nav className="site-nav" aria-label="Main navigation">
-            <a href="#about">About</a>
-            <a href="#services">Products</a>
-            <a href="#contact">Contact</a>
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#services">Plans</a>
+            <a href="#contact">Contact Us</a>
           </nav>
           <a className="button-primary button-compact" href="#contact">
             Book a Free Consultation

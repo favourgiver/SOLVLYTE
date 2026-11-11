@@ -73,6 +73,17 @@ describe("SOLVLYTE approved homepage copy", () => {
   });
 });
 
+describe("SOLVLYTE navigation", () => {
+  it("lists Home, About Us, Plans and Contact Us in that order", () => {
+    const nav = normalizedHomepage.slice(
+      normalizedHomepage.indexOf('aria-label="Main navigation"'),
+      normalizedHomepage.indexOf("</nav>"),
+    );
+    const items = [...nav.matchAll(/>([^<>]+)<\/a>/g)].map((match) => match[1].trim());
+    expect(items).toEqual(["Home", "About Us", "Plans", "Contact Us"]);
+  });
+});
+
 describe("SOLVLYTE restrained interface", () => {
   it("carries no decorative section labels or numbering", () => {
     const removed = [
