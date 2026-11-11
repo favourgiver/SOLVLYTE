@@ -385,9 +385,6 @@ function Index() {
             <p>Whether you're looking to power your home, keep your business running or reduce your dependence on generators, SOLVLYTE is here to help you make the switch to smarter energy.</p>
           </div>
         </div>
-        <div className="intro-marquee" aria-hidden="true">
-          <span>BETTER POWER, BUILT AROUND YOU</span><Sun size={19} /><span>PORT HARCOURT · NIGERIA</span><Sun size={19} />
-        </div>
       </section>
 
       <section id="services" className="services-section section-pad">
@@ -410,7 +407,7 @@ function Index() {
             ))}
           </div>
           <div className="service-footer">
-            <span>BUILT AROUND YOUR ENERGY REQUIREMENTS</span>
+            <span />
             <a className="text-link" href="#contact">Explore Our Plans <ArrowUpRight aria-hidden="true" /></a>
           </div>
         </div>
