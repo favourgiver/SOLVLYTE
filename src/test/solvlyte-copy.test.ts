@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const homepage = readFileSync(resolve(process.cwd(), "src/routes/index.tsx"), "utf8");
+const normalizedHomepage = homepage.replace(/\s+/g, " ");
 
 describe("SOLVLYTE approved homepage copy", () => {
   it("keeps both approved hero headlines and the two audience-specific messages", () => {
@@ -31,7 +32,7 @@ describe("SOLVLYTE approved homepage copy", () => {
     ];
 
     for (const question of questions) {
-      expect(homepage).toContain(`question: "${question}"`);
+      expect(normalizedHomepage).toContain(`question: "${question}"`);
     }
   });
 });
