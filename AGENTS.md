@@ -31,3 +31,8 @@ use the editor.
 
 ## SOLVLYTE homepage architecture
 - Keep the approved visual-only SOLVLYTE experience on the single `/` TanStack route with in-page anchors; this preserves the user's homepage-only scope and avoids implying unbuilt workflows.
+- The approved copy lives in `src/content/homepage.ts` and is locked word for word. `src/components/home/HomePage.test.tsx` compares the rendered page with `src/content/approved-homepage-copy.txt`; change both files together, and only when SOLVLYTE has approved new wording.
+- `src/routes/index.tsx` only mounts `HomePage`. Each section is a component in `src/components/home/`; shared pieces (header, footer, `CtaButton`, `SectionHeading`, `Picture`) are in `src/components/site/`.
+- Photographs are registered in `src/assets/images/index.ts` (AVIF with WebP fallbacks at several widths). The current set is AI-generated placeholder imagery, to be replaced with SOLVLYTE's own photography.
+- Buttons stay visual only until a real destination exists: `CtaButton` becomes a link only when given an `href`. Do not add forms, extra routes, integrations, or invented contact details and proof points.
+- Fonts are self-hosted from `src/assets/fonts/`. Do not add remote font or stylesheet requests.
