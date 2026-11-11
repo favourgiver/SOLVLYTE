@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const homepage = readFileSync(new URL("../routes/index.tsx", import.meta.url), "utf8");
+const homepage = readFileSync(resolve(process.cwd(), "src/routes/index.tsx"), "utf8");
 
 describe("SOLVLYTE approved homepage copy", () => {
   it("keeps both approved hero headlines and the two audience-specific messages", () => {
