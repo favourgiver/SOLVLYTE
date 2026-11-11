@@ -12,6 +12,58 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
+ * Typefaces. Manrope (display) and Inter (text) are self-hosted from src/assets/fonts so the
+ * page makes no third-party font request. Both are SIL Open Font License 1.1; the licence
+ * texts sit beside the files. The latin-ext files only download if a page needs them
+ * (for example the Naira sign).
+ */
+@font-face {
+  font-family: "Manrope Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("./assets/fonts/manrope-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Manrope Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("./assets/fonts/manrope-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./assets/fonts/inter-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./assets/fonts/inter-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+/*
  * Design system definition.
  *
  * The design lives in this file: oklch color tokens on the shadcn variables
@@ -30,6 +82,27 @@
  */
 
 @theme inline {
+  --font-sans: var(--ff-sans);
+  --font-display: var(--ff-display);
+
+  /* SOLVLYTE palette: bg-forest, text-gold, border-line, ... */
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+  --color-forest-soft: var(--forest-soft);
+  --color-paper: var(--paper);
+  --color-sage: var(--sage);
+  --color-sage-deep: var(--sage-deep);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-charcoal: var(--charcoal);
+  --color-moss: var(--moss);
+  --color-moss-deep: var(--moss-deep);
+  --color-mist: var(--mist);
+  --color-fern: var(--fern);
+  --color-sky: var(--sky);
+  --color-line: var(--line);
+  --color-line-inverse: var(--line-inverse);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -73,74 +146,111 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  /*
+   * SOLVLYTE brand palette (hex equivalents from the homepage brief in comments).
+   * Gold is the one action accent: primary buttons and small solar details only.
+   */
+  --forest: oklch(0.3223 0.0455 172.67); /* #173B31 deep green: brand anchor, dark panels */
+  --forest-deep: oklch(0.2613 0.0358 174.14); /* #0F2A23 pressed states, text on gold */
+  --forest-soft: oklch(0.3741 0.0471 172.25); /* #24493E raised surfaces on deep green */
+  --paper: oklch(0.9748 0.0066 106.52); /* #F7F7F2 warm off-white page background */
+  --sage: oklch(0.9421 0.0109 149.86); /* #E7EEE8 quiet bands and tiles */
+  --sage-deep: oklch(0.89 0.016 154.44); /* #D3DED6 hover on sage */
+  --gold: oklch(0.8189 0.1395 88.26); /* #E9BE4A solar gold */
+  --gold-deep: oklch(0.7671 0.1434 86.58); /* #DBAC2F gold hover */
+  --charcoal: oklch(0.2808 0.0122 160.49); /* #242B27 body text */
+  --moss: oklch(0.5851 0.0214 162.49); /* #718078 quiet half of large headings, numerals */
+  --moss-deep: oklch(0.4852 0.0214 160.48); /* #55635B secondary text at body sizes (AA) */
+  --mist: oklch(0.8546 0.0178 159.05); /* #C6D3CB body text on deep green */
+  --fern: oklch(0.7464 0.0297 161.82); /* #9DB3A7 quiet half of headings on deep green */
+  --sky: oklch(0.9585 0.011 225.98); /* #EAF3F7 pale sky: image placeholders */
+  --line: oklch(0.3223 0.0455 172.67 / 0.14); /* hairline on light surfaces */
+  --line-inverse: oklch(0.9748 0.0066 106.52 / 0.18); /* hairline on deep green */
+
+  --ff-sans:
+    "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --ff-display:
+    "Manrope Variable", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* Layout rhythm */
+  --gutter: clamp(1.25rem, 4vw, 2.5rem); /* page side margin */
+  --bleed: clamp(0.5rem, 1.6vw, 1.5rem); /* margin around the wide rounded panels */
+  --panel-pad: max(1.25rem, calc(var(--gutter) - var(--bleed)));
+  --section-y: clamp(4rem, 3rem + 5vw, 7rem); /* 64px on phones to 112px on desktop */
+  --arc: clamp(3.5rem, 11vw, 9.5rem); /* the single swept corner on feature photographs */
+  --focus-ring: var(--forest);
+
+  /* shadcn tokens, mapped onto the brand palette */
+  --radius: 0.75rem;
+  --background: var(--paper);
+  --foreground: var(--charcoal);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: var(--charcoal);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --popover-foreground: var(--charcoal);
+  --primary: var(--forest);
+  --primary-foreground: var(--paper);
+  --secondary: var(--sage);
+  --secondary-foreground: var(--forest);
+  --muted: var(--sage);
+  --muted-foreground: var(--moss-deep);
+  --accent: var(--gold);
+  --accent-foreground: var(--forest-deep);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--forest);
+  --chart-1: var(--forest);
+  --chart-2: var(--gold);
+  --chart-3: var(--moss);
+  --chart-4: var(--fern);
+  --chart-5: var(--sage-deep);
+  --sidebar: var(--paper);
+  --sidebar-foreground: var(--charcoal);
+  --sidebar-primary: var(--forest);
+  --sidebar-primary-foreground: var(--paper);
+  --sidebar-accent: var(--sage);
+  --sidebar-accent-foreground: var(--forest);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--forest);
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --background: var(--forest-deep);
+  --foreground: var(--paper);
+  --card: var(--forest);
+  --card-foreground: var(--paper);
+  --popover: var(--forest);
+  --popover-foreground: var(--paper);
+  --primary: var(--gold);
+  --primary-foreground: var(--forest-deep);
+  --secondary: var(--forest-soft);
+  --secondary-foreground: var(--paper);
+  --muted: var(--forest-soft);
+  --muted-foreground: var(--mist);
+  --accent: var(--gold);
+  --accent-foreground: var(--forest-deep);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --border: var(--line-inverse);
+  --input: var(--line-inverse);
+  --ring: var(--gold);
+  --chart-1: var(--gold);
+  --chart-2: var(--fern);
+  --chart-3: var(--mist);
+  --chart-4: var(--sage);
+  --chart-5: var(--moss);
+  --sidebar: var(--forest);
+  --sidebar-foreground: var(--paper);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: var(--forest-deep);
+  --sidebar-accent: var(--forest-soft);
+  --sidebar-accent-foreground: var(--paper);
+  --sidebar-border: var(--line-inverse);
+  --sidebar-ring: var(--gold);
 }
 
 @layer base {
@@ -148,8 +258,412 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+    /* keeps anchored sections clear of the sticky header */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* lets the FAQ rows animate to their natural height where supported */
+    interpolate-size: allow-keywords;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--ff-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
+
+  ::selection {
+    background-color: var(--gold);
+    color: var(--forest-deep);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------------------
+ * Layout and type utilities
+ * ------------------------------------------------------------------------------------- */
+
+/* Centred page column: 1240px of content plus the side margins. */
+@utility shell {
+  width: 100%;
+  max-width: calc(77.5rem + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* The same column, for use inside a wide rounded panel so its content lines up with the page. */
+@utility panel-shell {
+  width: 100%;
+  max-width: calc(77.5rem + 2 * var(--panel-pad));
+  margin-inline: auto;
+  padding-inline: var(--panel-pad);
+}
+
+/* A wide rounded panel that sits just inside the viewport edges. */
+@utility panel {
+  width: 100%;
+  max-width: 95rem;
+  margin-inline: auto;
+  border-radius: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+/* Marks a deep-green surface so focus rings switch to gold. */
+@utility on-dark {
+  --focus-ring: var(--gold);
+}
+
+/*
+ * Hero headline. Sized so each half of the two-tone headline holds its own lines:
+ * phones scale with the screen, tablets hold at 42px, desktop grows to 60px.
+ */
+@utility display-1 {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 8.2vw, 2.75rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+
+  @media (min-width: 40rem) {
+    font-size: clamp(2.125rem, 5.5vw, 2.625rem);
+  }
+
+  @media (min-width: 64rem) {
+    font-size: clamp(2.625rem, 5.1vw - 0.55rem, 3.75rem);
+  }
+}
+
+/*
+ * Section headings: 26px to 32px on phones, growing to 44px on desktop. The phone size follows
+ * the screen width so the headings break onto the same lines on every handset.
+ */
+@utility display-2 {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: clamp(1.625rem, 8.2vw - 0.2125rem, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+
+  @media (min-width: 40rem) {
+    font-size: clamp(2rem, 1.25rem + 1.9vw, 2.75rem);
+  }
+}
+
+@utility title-3 {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: clamp(1.1875rem, 1.1rem + 0.3vw, 1.3125rem);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-wrap: balance;
+}
+
+/* Running text asks the browser to avoid a single word alone on the last line. */
+@utility lead {
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+@utility prose-body {
+  font-size: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+/* Body copy inside cards, tiles and narrow columns. */
+@utility prose-card {
+  font-size: 1rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* One swept corner on feature photographs: the SOLVLYTE "arc". */
+@utility arc-tl {
+  border-top-left-radius: var(--arc) !important;
+}
+
+@utility arc-tr {
+  border-top-right-radius: var(--arc) !important;
+}
+
+/* ---------------------------------------------------------------------------------------
+ * Hero: two alternating slides. Copy and photo share one deep-green panel; the buttons sit
+ * outside the slides so they never move when the slide changes.
+ * ------------------------------------------------------------------------------------- */
+
+.hero-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.hero-media {
+  order: -1;
+  padding: 0.5rem 0.5rem 0;
+}
+
+.hero-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  border-radius: 1.125rem;
+  border-top-left-radius: var(--arc);
+  background-color: var(--forest-soft);
+}
+
+.hero-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1.75rem;
+  padding: 1.75rem var(--panel-pad) 2rem;
+}
+
+/* Both slides occupy the same grid cell, so the taller one sets the height for both. */
+.hero-slides {
+  display: grid;
+}
+
+.hero-slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  pointer-events: none;
+  user-select: none;
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease;
+}
+
+.hero-slide[data-active="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  user-select: auto;
+  transition:
+    opacity 720ms ease 320ms,
+    transform 720ms cubic-bezier(0.2, 0.7, 0.2, 1) 320ms;
+}
+
+/*
+ * Cross-fade without a dip: the incoming photo fades in on top while the outgoing one stays
+ * fully visible underneath, and is only hidden once the fade has finished.
+ */
+.hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0s linear 1200ms;
+}
+
+.hero-image[data-active="true"] {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 1200ms ease-in-out;
+}
+
+.hero-progress {
+  display: block;
+  height: 2px;
+  width: 3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background-color: var(--line-inverse);
+}
+
+.hero-progress > span {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background-color: var(--gold);
+}
+
+.hero-progress[data-state="full"] > span {
+  transform: scaleX(1);
+}
+
+.hero-progress[data-state="running"] > span {
+  animation: hero-progress var(--hero-slide-ms, 6000ms) linear forwards;
+}
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (min-width: 40rem) {
+  .hero-frame {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Tablet: photo across the top, copy in one column beneath it. */
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .hero-media {
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  .hero-frame {
+    aspect-ratio: 2 / 1;
+    border-radius: 1.25rem;
+    border-top-left-radius: var(--arc);
+  }
+
+  .hero-copy {
+    row-gap: 2rem;
+    padding-block: 2.5rem 2.5rem;
+  }
+}
+
+/* Desktop: copy on the left in the page column, photo on the right out to the panel edge. */
+@media (min-width: 64rem) {
+  .hero-panel {
+    grid-template-columns:
+      minmax(var(--panel-pad), 1fr) minmax(0, 41.85rem) minmax(0, 35.65rem)
+      minmax(var(--panel-pad), 1fr);
+    min-height: clamp(35rem, calc(100svh - 6.25rem), 44rem);
+  }
+
+  .hero-copy {
+    grid-column: 2;
+    align-content: center;
+    row-gap: 2.25rem;
+    padding: clamp(2.5rem, 6vh, 4rem) 2.5rem clamp(2.5rem, 6vh, 4rem) 0;
+  }
+
+  .hero-media {
+    order: 0;
+    grid-column: 3 / 5;
+    padding: 0.75rem 0.75rem 0.75rem 0;
+  }
+
+  .hero-frame {
+    height: 100%;
+    aspect-ratio: auto;
+    border-radius: 1.25rem;
+    border-top-left-radius: var(--arc);
+  }
+}
+
+/* Short laptop screens: tighten the hero so its buttons and indicators stay above the fold. */
+@media (min-width: 64rem) and (max-height: 43.75rem) {
+  .hero-panel {
+    min-height: 0;
+  }
+
+  .hero-copy {
+    row-gap: 1.5rem;
+    padding-block: 1.75rem;
+  }
+
+  .hero-copy :is(h1, h2) {
+    font-size: clamp(2.5rem, 4.4vw - 0.5rem, 3.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide,
+  .hero-slide[data-active="true"],
+  .hero-image,
+  .hero-image[data-active="true"] {
+    transform: none;
+    transition: none;
+  }
+
+  .hero-progress[data-state="running"] > span {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* ---------------------------------------------------------------------------------------
+ * FAQ rows: native <details>, so answers stay in the page for search and need no script.
+ * ------------------------------------------------------------------------------------- */
+
+.faq-row > summary {
+  list-style: none;
+}
+
+.faq-row > summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-row::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 320ms ease,
+    content-visibility 320ms allow-discrete;
+}
+
+.faq-row[open]::details-content {
+  block-size: auto;
+}
+
+.faq-row .faq-mark-v {
+  transition: transform 240ms ease;
+  transform-origin: center;
+}
+
+.faq-row[open] .faq-mark-v {
+  transform: scaleY(0);
+}
+
+/* ---------------------------------------------------------------------------------------
+ * Footer: the wordmark, in the header's lettering, scaled to span the page column.
+ * 17.3cqw is the size at which Manrope ExtraBold with this tracking reaches both edges of its
+ * container (the small negative margin cancels the side bearing of the S). The first
+ * font-size is the fallback for browsers without container units.
+ * ------------------------------------------------------------------------------------- */
+
+.footer-wordmark {
+  margin-left: -0.045em;
+  font-size: min(15.2vw, 13rem);
+  font-size: 17.3cqw;
+  line-height: 0.9;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
 }
