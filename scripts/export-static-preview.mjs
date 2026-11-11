@@ -30,18 +30,14 @@ const ASSET_DIR = join(OUT_DIR, "assets");
 /** Approved hero copy — the live app swaps these via React state. */
 const SLIDES = [
   {
-    eyebrow: "RELIABLE SOLAR SOLUTIONS FOR YOUR HOME",
     title: "Your World Doesn't Have to Stop When the Grid Does.",
     description:
       "Tired of unpredictable electricity, rising fuel costs and the constant dependence on generators? Enjoy a better way to power your home with premium, affordable solar solutions designed around your energy needs.",
-    audience: "FOR THE HOME",
   },
   {
-    eyebrow: "SMART ENERGY SOLUTIONS FOR YOUR BUSINESS",
     title: "Because Your Business Can't Afford to Stop.",
     description:
       "Power interruptions shouldn't stand between your business and its next milestone. Keep your operations running with reliable, professionally designed solar solutions that help reduce fuel expenses and minimise power-related disruptions.",
-    audience: "FOR YOUR BUSINESS",
   },
 ];
 
@@ -49,15 +45,13 @@ const HERO_SCRIPT = `
 <script>
 (function () {
   var slides = ${JSON.stringify(SLIDES, null, 2)};
-  var section = document.querySelector('.hero-section');
+  var section = document.querySelector('.hero');
   var copy = document.querySelector('.hero-copy');
   if (!section || !copy) return;
-  var kicker = copy.querySelector('.hero-kicker');
   var heading = copy.querySelector('h1');
   var para = copy.querySelector('p');
-  var pill = document.querySelector('.hero-audience-pill');
-  var photos = document.querySelectorAll('.hero-photo');
-  var dots = document.querySelectorAll('.slide-dot');
+  var photos = document.querySelectorAll('.hero-media img');
+  var dots = document.querySelectorAll('.hero-slides button');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var index = 0, timer = null, paused = false;
 
@@ -69,17 +63,12 @@ const HERO_SCRIPT = `
       dots[i].classList.toggle('is-active', i === index);
       dots[i].setAttribute('aria-pressed', i === index ? 'true' : 'false');
     }
-    kicker.innerHTML = '<span></span>' + slide.eyebrow;
     heading.textContent = slide.title;
     para.textContent = slide.description;
-    if (pill) pill.textContent = slide.audience;
     if (animate && !reduce) {
-      [copy, pill].forEach(function (el) {
-        if (!el) return;
-        el.style.animation = 'none';
-        void el.offsetHeight;
-        el.style.animation = '';
-      });
+      copy.style.animation = 'none';
+      void copy.offsetHeight;
+      copy.style.animation = '';
     }
   }
   function start() {
@@ -114,7 +103,9 @@ function dataUri(buffer, mime) {
 
 /** Pull the assets the SSR output references, so both output variants use the same files. */
 async function collectAssets(html) {
-  const sources = [...new Set([...html.matchAll(/<img\b[^>]*\ssrc="(\/src\/assets\/[^"]+)"/g)].map((m) => m[1]))];
+  const sources = [
+    ...new Set([...html.matchAll(/<img\b[^>]*\ssrc="(\/src\/assets\/[^"]+)"/g)].map((m) => m[1])),
+  ];
   const assets = new Map();
   for (const src of sources) {
     assets.set(src, await get(src, "buffer"));
@@ -138,7 +129,9 @@ async function main() {
     get("/"),
     // Vite serves the stylesheet as an HMR JS module unless ?direct is requested.
     get("/src/styles.css?direct"),
-    existsSync(join(root, "public/favicon.ico")) ? readFile(join(root, "public/favicon.ico")) : null,
+    existsSync(join(root, "public/favicon.ico"))
+      ? readFile(join(root, "public/favicon.ico"))
+      : null,
   ]);
 
   if (!css.includes("tailwindcss") || css.includes("import.meta.hot")) {
@@ -161,7 +154,8 @@ async function main() {
     /<link rel="stylesheet" href="\/src\/styles\.css"[^>]*>/,
     `<style id="solvlyte-design">\n${css}\n</style>`,
   );
-  if (favicon) html = html.replace('href="/favicon.ico"', `href="${dataUri(favicon, "image/x-icon")}"`);
+  if (favicon)
+    html = html.replace('href="/favicon.ico"', `href="${dataUri(favicon, "image/x-icon")}"`);
 
   const withAssets = (resolveSrc) => {
     let out = html;
@@ -170,12 +164,17 @@ async function main() {
   };
 
   // 1. Linked variant: small HTML, assets cached separately. Used for the Pages preview.
-  await writeFile(join(OUT_DIR, "index.html"), withAssets((name) => `assets/${name}`));
+  await writeFile(
+    join(OUT_DIR, "index.html"),
+    withAssets((name) => `assets/${name}`),
+  );
 
   // 2. Self-contained variant: one file you can download and open offline.
   await writeFile(
     join(OUT_DIR, "solvlyte-homepage.html"),
-    withAssets((name) => dataUri(assets.get([...names].find(([, n]) => n === name)[0]), "image/jpeg")),
+    withAssets((name) =>
+      dataUri(assets.get([...names].find(([, n]) => n === name)[0]), "image/jpeg"),
+    ),
   );
 
   // Tells GitHub Pages to serve the files verbatim instead of running Jekyll.
@@ -183,7 +182,10 @@ async function main() {
 
   const sizes = [
     ["docs/index.html", (await readFile(join(OUT_DIR, "index.html"))).length],
-    ["docs/solvlyte-homepage.html", (await readFile(join(OUT_DIR, "solvlyte-homepage.html"))).length],
+    [
+      "docs/solvlyte-homepage.html",
+      (await readFile(join(OUT_DIR, "solvlyte-homepage.html"))).length,
+    ],
   ];
   for (const [file, bytes] of sizes) console.log(`${file}  ${(bytes / 1024).toFixed(0)} KB`);
   console.log(`assets: ${[...names.values()].join(", ")}`);
