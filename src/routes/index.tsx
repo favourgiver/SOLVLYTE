@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  Armchair,
   ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
+  BadgeCheck,
   BatteryCharging,
   Check,
   CircleHelp,
   Compass,
+  Fuel,
+  Headset,
   Leaf,
   PanelsTopLeft,
+  PlugZap,
   ShieldCheck,
   Sun,
+  TrendingUp,
   Wrench,
   Zap,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import homeImage from "@/assets/solvlyte-home.jpg";
 import businessImage from "@/assets/solvlyte-business.jpg";
 
@@ -107,31 +112,37 @@ const benefits = [
     title: "Reliable Electricity",
     description:
       "Enjoy a more dependable source of electricity with a solar system designed around your household or business energy requirements.",
+    icon: Zap,
   },
   {
     title: "Reduced Fuel Expenses",
     description:
       "Reduce your dependence on petrol and diesel generators and potentially save on recurring fuel expenses.",
+    icon: Fuel,
   },
   {
     title: "Greater Energy Independence",
     description:
       "Take greater control of your electricity instead of depending entirely on the public power supply.",
+    icon: Sun,
   },
   {
     title: "Comfort and Convenience",
     description:
       "Enjoy a quieter power experience without the constant noise, inconvenience and fuel runs associated with conventional generators.",
+    icon: Armchair,
   },
   {
     title: "Power for Your Everyday Needs",
     description:
       "Keep essential household appliances and business equipment running with a properly designed solar system.",
+    icon: PlugZap,
   },
   {
     title: "Long-Term Value",
     description:
       "Invest in an energy solution designed to serve your needs over time, with appropriate maintenance and technical support.",
+    icon: TrendingUp,
   },
 ];
 
@@ -166,22 +177,27 @@ const processSteps = [
 const assurance = [
   {
     title: "Quality Equipment",
-    description: "We focus on providing quality solar equipment suited to your energy requirements.",
+    description:
+      "We focus on providing quality solar equipment suited to your energy requirements.",
+    icon: BadgeCheck,
   },
   {
     title: "Warranty Assurance",
     description:
       "We provide clear information about applicable product and installation warranties so you understand the coverage associated with your investment.",
+    icon: ShieldCheck,
   },
   {
     title: "Maintenance & Repairs",
     description:
       "Our maintenance and repair services help you address system issues and maintain efficient operation.",
+    icon: Wrench,
   },
   {
     title: "Continued Technical Support",
     description:
       "You can continue to reach out to us for assistance even after your solar system has been installed.",
+    icon: Headset,
   },
 ];
 
@@ -274,6 +290,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(false);
+  const [paused, setPaused] = useState(false);
   const active = slides[activeSlide];
 
   useEffect(() => {
@@ -285,129 +302,245 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    if (!autoplay) return;
+    if (!autoplay || paused) return;
     const interval = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % slides.length);
     }, 5600);
     return () => window.clearInterval(interval);
-  }, [autoplay]);
+  }, [autoplay, paused]);
 
   if (!active) return null;
 
   return (
-    <main className="solvlyte-page min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="solvlyte-page">
+      <a className="skip-link" href="#about">
+        Skip to content
+      </a>
+
       <header className="site-header">
         <div className="site-header-inner">
           <a className="wordmark" href="#home" aria-label="SOLVLYTE Home">
             <span className="wordmark-symbol" aria-hidden="true">
               <Sun size={19} strokeWidth={1.8} />
             </span>
-            SOLVLYTE<span className="wordmark-period">.</span>
+            SOLVLYTE
+            <span className="wordmark-period" aria-hidden="true">
+              .
+            </span>
           </a>
           <nav className="desktop-nav" aria-label="Main navigation">
-            <a className="nav-current" href="#home">Home</a>
+            <a className="nav-current" href="#home">
+              Home
+            </a>
             <a href="#about">About Us</a>
             <a href="#services">Plans</a>
             <a href="#contact">Contact Us</a>
           </nav>
-          <Button className="header-cta" type="button">
+          <a className="header-cta" href="#contact">
             Book a Free Consultation <ArrowUpRight aria-hidden="true" />
-          </Button>
+          </a>
         </div>
       </header>
 
-      <section id="home" className="hero-section" aria-label="Solar solutions for homes and businesses">
-        <div className="hero-images" aria-hidden="true">
-          {slides.map((slide, index) => (
-            <img
-              key={slide.audience}
-              className={`hero-photo ${index === activeSlide ? "is-active" : ""}`}
-              src={slide.image}
-              alt=""
-              width={1536}
-              height={1024}
-              fetchPriority={index === 0 ? "high" : "auto"}
-            />
-          ))}
-        </div>
-        <div className="hero-shade" aria-hidden="true" />
-        <div className="hero-content page-width">
-          <div className="hero-copy" key={active.audience}>
-            <div className="hero-kicker"><span />{active.eyebrow}</div>
-            <h1>{active.title}</h1>
-            <p>{active.description}</p>
-            <div className="hero-actions">
-              <Button type="button" className="button-gold">
-                Book a Free Consultation <ArrowUpRight aria-hidden="true" />
-              </Button>
-              <a className="hero-secondary" href="#services">
-                Explore Our Plans <ArrowRight aria-hidden="true" />
-              </a>
+      <section
+        id="home"
+        className="hero-section"
+        aria-label="Solar solutions for homes and businesses"
+        aria-roledescription="carousel"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
+        <div className="hero-copy-panel">
+          <div className="hero-copy-inner">
+            <div className="hero-copy" key={active.audience}>
+              <div className="hero-kicker">
+                <span aria-hidden="true" />
+                {active.eyebrow}
+              </div>
+              <h1>{active.title}</h1>
+              <p>{active.description}</p>
+              <div className="hero-actions">
+                <a className="button-gold" href="#contact">
+                  Book a Free Consultation <ArrowUpRight aria-hidden="true" />
+                </a>
+                <a className="hero-secondary" href="#services">
+                  Explore Our Plans <ArrowRight aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+            <div className="hero-footer">
+              <span className="hero-location">PORT HARCOURT · RIVERS STATE</span>
+              <div className="slide-picker" aria-label="Hero slides">
+                {slides.map((slide, index) => (
+                  <button
+                    key={slide.audience}
+                    type="button"
+                    className={`slide-dot ${index === activeSlide ? "is-active" : ""}`}
+                    aria-label={`Show ${index === 0 ? "residential" : "business"} slide`}
+                    aria-pressed={index === activeSlide}
+                    onClick={() => setActiveSlide(index)}
+                  >
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                  </button>
+                ))}
+                <span className="slide-total">/ 02</span>
+              </div>
             </div>
           </div>
-          <div className="hero-footer">
-            <span>PORT HARCOURT · RIVERS STATE</span>
-            <div className="slide-picker" aria-label="Hero slides">
-              {slides.map((slide, index) => (
-                <button
-                  key={slide.audience}
-                  type="button"
-                  className={`slide-dot ${index === activeSlide ? "is-active" : ""}`}
-                  aria-label={`Show ${index === 0 ? "residential" : "business"} slide`}
-                  aria-pressed={index === activeSlide}
-                  onClick={() => setActiveSlide(index)}
-                >
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                </button>
-              ))}
-              <span className="slide-total">/ 02</span>
-            </div>
-          </div>
-          <a className="hero-scroll" href="#about" aria-label="Scroll to Who We Are">
-            <ArrowDownRight aria-hidden="true" />
-          </a>
         </div>
+
+        <div className="hero-media-panel" aria-hidden="true">
+          <div className="hero-media-frame">
+            {slides.map((slide, index) => (
+              <img
+                key={slide.audience}
+                className={`hero-photo ${index === activeSlide ? "is-active" : ""}`}
+                src={slide.image}
+                alt=""
+                width={1536}
+                height={1024}
+                fetchPriority={index === 0 ? "high" : "auto"}
+              />
+            ))}
+            <span className="hero-audience-pill" key={active.audience}>
+              {active.audience}
+            </span>
+          </div>
+        </div>
+
+        <a className="hero-scroll" href="#about" aria-label="Scroll to Who We Are">
+          <ArrowDownRight aria-hidden="true" />
+        </a>
+
+        <svg
+          className="hero-curve"
+          viewBox="0 0 1440 72"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,72 L0,44 C240,8 480,0 720,0 C960,0 1200,8 1440,44 L1440,72 Z" />
+        </svg>
       </section>
 
       <section id="about" className="intro-section section-pad">
         <div className="page-width intro-grid">
-          <div className="intro-heading">
-            <div className="eyebrow"><span>01</span> WHO WE ARE</div>
+          <div className="intro-collage">
+            <div className="intro-collage-back" aria-hidden="true" />
+            <figure className="intro-photo-main">
+              <img
+                src={homeImage}
+                alt="Solar panels on a modern home surrounded by tropical greenery at sunset"
+                width={1536}
+                height={1024}
+                loading="lazy"
+              />
+            </figure>
+            <figure className="intro-photo-small">
+              <img
+                src={businessImage}
+                alt="A Nigerian business premises with rooftop solar panels and tropical landscaping"
+                width={1536}
+                height={1024}
+                loading="lazy"
+              />
+            </figure>
+            <span className="intro-collage-arc" aria-hidden="true">
+              <Sun size={22} strokeWidth={1.5} />
+            </span>
+          </div>
+
+          <div className="intro-copy">
+            <div className="eyebrow">
+              <span>01</span> WHO WE ARE
+            </div>
             <h2>A Better Way to Experience Electricity.</h2>
+            <p className="intro-lead">
+              We believe reliable electricity should not be a luxury. It should be something every
+              home and business can depend on.
+            </p>
+            <p>
+              We are committed to helping individuals, households and businesses overcome the
+              challenges of unreliable electricity and rising energy costs.
+            </p>
+            <p>
+              Through the supply of quality solar equipment, professional installation and
+              dependable after-sales support, we provide energy solutions designed around your
+              unique needs.
+            </p>
+            <p>
+              Whether you're looking to power your home, keep your business running or reduce your
+              dependence on generators, SOLVLYTE is here to help you make the switch to smarter
+              energy.
+            </p>
             <a className="text-link" href="#contact">
               Discover More About Us <ArrowUpRight aria-hidden="true" />
             </a>
           </div>
-          <div className="intro-copy">
-            <p className="intro-lead">We believe reliable electricity should not be a luxury. It should be something every home and business can depend on.</p>
-            <p>We are committed to helping individuals, households and businesses overcome the challenges of unreliable electricity and rising energy costs.</p>
-            <p>Through the supply of quality solar equipment, professional installation and dependable after-sales support, we provide energy solutions designed around your unique needs.</p>
-            <p>Whether you're looking to power your home, keep your business running or reduce your dependence on generators, SOLVLYTE is here to help you make the switch to smarter energy.</p>
-          </div>
         </div>
       </section>
+
+      <div className="brand-ticker" aria-hidden="true">
+        <div className="brand-ticker-track">
+          {[0, 1].map((group) => (
+            <div className="brand-ticker-group" key={group}>
+              {[0, 1, 2, 3].map((item) => (
+                <span className="brand-ticker-item" key={item}>
+                  <Sun size={15} strokeWidth={1.8} />
+                  Spend Less on Fuel. Enjoy More Reliable Power.
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <section id="services" className="services-section section-pad">
         <div className="page-width">
           <div className="section-heading section-heading-row">
             <div>
-              <div className="eyebrow"><span>02</span> OUR PRODUCTS &amp; SERVICES</div>
+              <div className="eyebrow">
+                <span>02</span> OUR PRODUCTS &amp; SERVICES
+              </div>
               <h2>Everything You Need for a Smarter Power Solution.</h2>
             </div>
-            <p>From consultation to professional installation and ongoing support, SOLVLYTE provides the guidance, products and services you need to make the most of solar energy.</p>
+            <p>
+              From consultation to professional installation and ongoing support, SOLVLYTE provides
+              the guidance, products and services you need to make the most of solar energy.
+            </p>
           </div>
-          <div className="service-grid">
-            {services.map(({ title, description, icon: Icon, number }) => (
-              <article className="service-item" key={title}>
-                <div className="service-top"><span>{number}</span><Icon aria-hidden="true" size={24} strokeWidth={1.5} /></div>
-                <h3>{title}</h3>
-                <p>{description}</p>
-                <span className="service-rule" aria-hidden="true" />
-              </article>
-            ))}
-          </div>
-          <div className="service-footer">
-            <a className="text-link" href="#contact">Explore Our Plans <ArrowUpRight aria-hidden="true" /></a>
+
+          <div className="services-layout">
+            <figure className="services-photo">
+              <img
+                src={businessImage}
+                alt="A Nigerian business premises with rooftop solar panels and tropical landscaping"
+                width={1536}
+                height={1024}
+                loading="lazy"
+              />
+            </figure>
+            <div className="service-list">
+              {services.map(({ title, description, icon: Icon, number }) => (
+                <article className="service-item" key={title}>
+                  <span className="service-number">{number}</span>
+                  <span className="service-icon">
+                    <Icon aria-hidden="true" size={22} strokeWidth={1.6} />
+                  </span>
+                  <div className="service-text">
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                  </div>
+                  <span className="service-rule" aria-hidden="true" />
+                </article>
+              ))}
+              <div className="service-footer">
+                <a className="text-link" href="#services">
+                  Explore Our Plans <ArrowUpRight aria-hidden="true" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -415,16 +548,27 @@ function Index() {
       <section className="advantage-section section-pad">
         <div className="page-width advantage-layout">
           <div className="advantage-intro">
-            <div className="eyebrow eyebrow-light"><span>03</span> THE SOLVLYTE ADVANTAGE</div>
+            <div className="eyebrow eyebrow-light">
+              <span>03</span> THE SOLVLYTE ADVANTAGE
+            </div>
             <h2>Premium Quality Shouldn't Come at an Unaffordable Price.</h2>
-            <p>Solar solutions are significant investments. That's why you should get quality equipment, professional service and real value for your money.</p>
-            <div className="advantage-mark" aria-hidden="true"><Sun size={31} strokeWidth={1.4} /><span>SOLVLYTE</span></div>
+            <p>
+              Solar solutions are significant investments. That's why you should get quality
+              equipment, professional service and real value for your money.
+            </p>
+            <div className="advantage-mark" aria-hidden="true">
+              <Sun size={31} strokeWidth={1.4} />
+              <span>SOLVLYTE</span>
+            </div>
           </div>
           <div className="advantage-list">
             {advantages.map(({ title, description }, index) => (
               <article className="advantage-item" key={title}>
                 <span className="advantage-number">0{index + 1}</span>
-                <div><h3>{title}</h3><p>{description}</p></div>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </div>
                 <Check className="advantage-check" aria-hidden="true" size={19} />
               </article>
             ))}
@@ -436,18 +580,27 @@ function Index() {
         <div className="page-width">
           <div className="section-heading benefits-heading">
             <div>
-              <div className="eyebrow"><span>04</span> MORE THAN JUST SOLAR EQUIPMENT</div>
+              <div className="eyebrow">
+                <span>04</span> MORE THAN JUST SOLAR EQUIPMENT
+              </div>
               <h2>A Better Power Experience, Designed Around Your Needs.</h2>
             </div>
-            <p>Imagine spending less time worrying about power outages and more time focusing on what matters. With the right solar solution from SOLVLYTE, you can enjoy:</p>
+            <p>
+              Imagine spending less time worrying about power outages and more time focusing on what
+              matters. With the right solar solution from SOLVLYTE, you can enjoy:
+            </p>
           </div>
           <div className="benefit-grid">
-            {benefits.map(({ title, description }, index) => (
+            {benefits.map(({ title, description, icon: Icon }, index) => (
               <article className="benefit-item" key={title}>
-                <span className="benefit-number">0{index + 1}</span>
+                <div className="benefit-top">
+                  <span className="benefit-icon">
+                    <Icon aria-hidden="true" size={21} strokeWidth={1.6} />
+                  </span>
+                  <span className="benefit-number">0{index + 1}</span>
+                </div>
                 <h3>{title}</h3>
                 <p>{description}</p>
-                <span className="benefit-spark" aria-hidden="true"><Sun size={16} strokeWidth={1.5} /></span>
               </article>
             ))}
           </div>
@@ -458,42 +611,73 @@ function Index() {
         <div className="page-width">
           <div className="process-heading">
             <div>
-              <div className="eyebrow"><span>05</span> YOUR JOURNEY TO BETTER POWER</div>
+              <div className="eyebrow">
+                <span>05</span> YOUR JOURNEY TO BETTER POWER
+              </div>
               <h2>Getting Started with SOLVLYTE Is Simple.</h2>
             </div>
-            <p>Finding the right solar solution shouldn't be complicated. Our process is designed to help you understand your energy needs and find a suitable solution without unnecessary complications.</p>
+            <p>
+              Finding the right solar solution shouldn't be complicated. Our process is designed to
+              help you understand your energy needs and find a suitable solution without unnecessary
+              complications.
+            </p>
           </div>
-          <div className="process-list">
+          <ol className="process-list">
             {processSteps.map(({ title, description }, index) => (
-              <article className="process-item" key={title}>
-                <span className="process-number">0{index + 1}</span>
-                <div className="process-marker" aria-hidden="true"><span /></div>
-                <div className="process-copy"><h3>{title}</h3><p>{description}</p></div>
-              </article>
+              <li className={`process-item ${index === 0 ? "process-item-first" : ""}`} key={title}>
+                <span className="process-number" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="process-copy">
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </div>
+              </li>
             ))}
+          </ol>
+          <div className="process-cta-wrap">
+            <a className="button-gold" href="#contact">
+              Book Your Free Consultation <ArrowUpRight aria-hidden="true" />
+            </a>
           </div>
-          <Button className="button-gold process-cta" type="button">
-            Book Your Free Consultation <ArrowUpRight aria-hidden="true" />
-          </Button>
         </div>
       </section>
 
       <section className="assurance-section section-pad">
         <div className="page-width assurance-layout">
           <div className="assurance-intro">
-            <div className="eyebrow"><span>06</span> OUR COMMITMENT TO YOU</div>
+            <div className="eyebrow">
+              <span>06</span> OUR COMMITMENT TO YOU
+            </div>
             <h2>Our Commitment Doesn't End at Installation.</h2>
             <p>Installing your solar system is only the beginning of our relationship with you.</p>
-            <p>At SOLVLYTE, we understand that investing in solar energy means investing in the long-term comfort and productivity of your home or business.</p>
-            <p>That's why we place importance on equipment quality, applicable product warranties, proper installation and continued customer support.</p>
-            <p>Whether you need routine maintenance, technical assistance or repairs, we're committed to helping you get lasting value from your solar investment.</p>
-            <div className="assurance-signoff"><Leaf size={19} aria-hidden="true" /> SOLVLYTE: Here for your power needs, beyond installation.</div>
+            <p>
+              At SOLVLYTE, we understand that investing in solar energy means investing in the
+              long-term comfort and productivity of your home or business.
+            </p>
+            <p>
+              That's why we place importance on equipment quality, applicable product warranties,
+              proper installation and continued customer support.
+            </p>
+            <p>
+              Whether you need routine maintenance, technical assistance or repairs, we're committed
+              to helping you get lasting value from your solar investment.
+            </p>
+            <div className="assurance-signoff">
+              <Leaf size={19} aria-hidden="true" /> SOLVLYTE: Here for your power needs, beyond
+              installation.
+            </div>
           </div>
           <div className="assurance-items">
-            {assurance.map(({ title, description }) => (
+            {assurance.map(({ title, description, icon: Icon }) => (
               <article className="assurance-item" key={title}>
-                <span className="assurance-icon"><ShieldCheck aria-hidden="true" size={21} strokeWidth={1.5} /></span>
-                <div><h3>{title}</h3><p>{description}</p></div>
+                <span className="assurance-icon">
+                  <Icon aria-hidden="true" size={21} strokeWidth={1.5} />
+                </span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -503,14 +687,22 @@ function Index() {
       <section className="faq-section section-pad">
         <div className="page-width faq-layout">
           <div className="faq-intro">
-            <div className="eyebrow"><span>07</span> HAVE QUESTIONS?</div>
+            <div className="eyebrow">
+              <span>07</span> HAVE QUESTIONS?
+            </div>
             <h2>Everything You Need to Know Before Getting Started.</h2>
             <CircleHelp size={42} strokeWidth={1.2} aria-hidden="true" />
           </div>
           <div className="faq-list">
             {faqs.map(({ question, answer }, index) => (
               <details className="faq-item" key={question}>
-                <summary><span className="faq-index">{String(index + 1).padStart(2, "0")}</span><span className="faq-question">{question}</span><span className="faq-toggle" aria-hidden="true">+</span></summary>
+                <summary>
+                  <span className="faq-index">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="faq-question">{question}</span>
+                  <span className="faq-toggle" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
                 <p>{answer}</p>
               </details>
             ))}
@@ -519,16 +711,33 @@ function Index() {
       </section>
 
       <section id="contact" className="closing-section section-pad">
-        <div className="closing-sun" aria-hidden="true"><Sun size={58} strokeWidth={1} /></div>
+        <div className="closing-sun" aria-hidden="true">
+          <Sun size={58} strokeWidth={1} />
+        </div>
         <div className="page-width closing-content">
-          <div className="eyebrow eyebrow-light"><span>08</span> YOUR BETTER POWER EXPERIENCE STARTS HERE</div>
+          <div className="eyebrow eyebrow-light">
+            <span>08</span> YOUR BETTER POWER EXPERIENCE STARTS HERE
+          </div>
           <h2>Stop Adjusting to Poor Electricity. Start Enjoying a Better Solution.</h2>
-          <p>You shouldn't have to constantly worry about power outages, rising fuel costs or interrupted daily activities.</p>
-          <p>Take the first step towards a more dependable and affordable power solution with SOLVLYTE.</p>
-          <p>Whether you're looking to power your home or keep your business running, we're ready to help you find a solar solution that works for you.</p>
+          <p>
+            You shouldn't have to constantly worry about power outages, rising fuel costs or
+            interrupted daily activities.
+          </p>
+          <p>
+            Take the first step towards a more dependable and affordable power solution with
+            SOLVLYTE.
+          </p>
+          <p>
+            Whether you're looking to power your home or keep your business running, we're ready to
+            help you find a solar solution that works for you.
+          </p>
           <div className="closing-actions">
-            <Button className="button-gold" type="button">Book a Free Consultation <ArrowUpRight aria-hidden="true" /></Button>
-            <Button className="button-quiet" type="button">Contact Us <ArrowRight aria-hidden="true" /></Button>
+            <a className="button-gold" href="#contact">
+              Book a Free Consultation <ArrowUpRight aria-hidden="true" />
+            </a>
+            <a className="button-quiet" href="#contact">
+              Contact Us <ArrowRight aria-hidden="true" />
+            </a>
           </div>
         </div>
       </section>
@@ -536,11 +745,18 @@ function Index() {
       <footer className="site-footer">
         <div className="page-width footer-inner">
           <a className="wordmark footer-wordmark" href="#home">
-            <span className="wordmark-symbol" aria-hidden="true"><Sun size={19} strokeWidth={1.8} /></span>
-            SOLVLYTE<span className="wordmark-period">.</span>
+            <span className="wordmark-symbol" aria-hidden="true">
+              <Sun size={19} strokeWidth={1.8} />
+            </span>
+            SOLVLYTE
+            <span className="wordmark-period" aria-hidden="true">
+              .
+            </span>
           </a>
           <p>Spend Less on Fuel. Enjoy More Reliable Power.</p>
-          <span className="footer-location"><Compass size={15} aria-hidden="true" /> PORT HARCOURT, NIGERIA</span>
+          <span className="footer-location">
+            <Compass size={15} aria-hidden="true" /> PORT HARCOURT, NIGERIA
+          </span>
         </div>
       </footer>
     </main>
